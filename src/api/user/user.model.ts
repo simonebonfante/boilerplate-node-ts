@@ -37,7 +37,7 @@ export class User extends Model<User> {
   public password!: string;
 
   @HasMany(() => Post)
-  posts: Post[];
+  Posts: Post[];
 
   @BeforeCreate
   @BeforeUpdate

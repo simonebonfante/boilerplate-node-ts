@@ -35,7 +35,9 @@ export class PostController implements interfaces.Controller {
     @response() res: Response,
   ): Promise<Post | Response> {
     try {
-      return await this.postService.createPost(post as Post);
+      const postCreated = await this.postService.createPost(post as Post);
+      if (!postCreated) throw new Error('An error occurred while creating post');
+      return postCreated;
     } catch(error) {
       console.log(error);
       return res

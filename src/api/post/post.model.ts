@@ -1,5 +1,5 @@
 import { User } from '../user/user.model';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BeforeCreate, BeforeUpdate, BelongsTo, Column, DataType, DefaultScope, ForeignKey, Model, Table } from 'sequelize-typescript';
 
 export const POST_REPOSITORY: symbol = Symbol.for('PostRepository');
 
@@ -10,6 +10,11 @@ export interface PostAttribute {
   userId: string;
 }
 
+@DefaultScope(() => ({
+  attributes: {
+    exclude: ['content'],
+  },
+}))
 @Table
 export class Post extends Model<Post> {
   @Column({
@@ -34,6 +39,25 @@ export class Post extends Model<Post> {
 
   @BelongsTo(() => User)
   User: User;
+
+  get decryptContent(): string {
+    // decypt value
+    return this.content.split(" Hello world")[0];
+  }
+
+  @Column(DataType.VIRTUAL)
+  get fullName(): string {
+    return this.getDataValue('content') + ' my encrypt';
+  }
+
+  @BeforeCreate
+  @BeforeUpdate
+  static async hashContent(instance: Post) {
+    if (instance.changed('content')) {
+      // crypt content
+      instance.content = instance.content + ' Hello world'
+    }
+  }
 }
 
 export type PostRepository = typeof Post;
