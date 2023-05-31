@@ -1,5 +1,6 @@
-import { Column, DataType, Model, Table, BeforeCreate, BeforeUpdate } from 'sequelize-typescript';
+import { Column, DataType, Model, Table, BeforeCreate, BeforeUpdate, HasMany } from 'sequelize-typescript';
 import bcrypt from 'bcrypt';
+import { Post } from '../post/post.model';
 
 export const USER_REPOSITORY: symbol = Symbol.for('UserRepository');
 
@@ -34,6 +35,9 @@ export class User extends Model<User> {
     type: DataType.STRING,
   })
   public password!: string;
+
+  @HasMany(() => Post)
+  posts: Post[];
 
   @BeforeCreate
   @BeforeUpdate

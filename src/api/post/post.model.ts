@@ -1,7 +1,14 @@
 import { User } from '../user/user.model';
-import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
 export const POST_REPOSITORY: symbol = Symbol.for('PostRepository');
+
+export interface PostAttribute {
+  id: number;
+  title: string;
+  content: string;
+  userId: string;
+}
 
 @Table
 export class Post extends Model<Post> {
@@ -24,6 +31,9 @@ export class Post extends Model<Post> {
   @ForeignKey(() => User)
   @Column
   public userId!: number;
+
+  @BelongsTo(() => User)
+  User: User;
 }
 
 export type PostRepository = typeof Post;

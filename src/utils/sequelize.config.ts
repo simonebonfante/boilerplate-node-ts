@@ -1,3 +1,4 @@
+import { Post } from '../api/post/post.model';
 import { User } from '../api/user/user.model';
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
 
@@ -24,15 +25,13 @@ export class SequelizeConfig {
 
   setupModels(): void {
     // Set up models
-    this.sequelize.addModels([User]);
+    this.sequelize.addModels([User, Post]);
   }
 
   async setupDb(): Promise<void> {
     await Promise.resolve(this.sequelize.authenticate());
     await Promise.resolve(this.sequelize.sync());
   }
-
-  
 }
 
 

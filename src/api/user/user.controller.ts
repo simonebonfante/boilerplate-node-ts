@@ -19,7 +19,7 @@ export class UserController implements interfaces.Controller {
   public constructor(@inject(USER_SERVICE) private readonly userService: UserService) {}
 
   @httpGet('/all')
-  public async getTodos(@response() res: Response): Promise<readonly User[] | Response> {
+  public async getUsers(@response() res: Response): Promise<readonly User[] | Response> {
     try {
       return await this.userService.getUsers();
     } catch (error) {
