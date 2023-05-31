@@ -1,7 +1,6 @@
 import { Column, DataType, Model, Table, BeforeCreate, BeforeUpdate, HasMany, AfterFind } from 'sequelize-typescript';
 import bcrypt from 'bcrypt';
 import { Post } from '../post/post.model';
-import CryptoJS from 'crypto-js';
 
 export const USER_REPOSITORY: symbol = Symbol.for('UserRepository');
 
@@ -51,23 +50,15 @@ export class User extends Model<User> {
   }
 
   @AfterFind
-  static decryptUserPostContent(instances: User | User[]): void {
+  static decryptPostContent(instances: User | User[]): void {
     if (Array.isArray(instances)) {
       instances.forEach((instance) => {
-        User.decryptUserPostContent(instance);
+        User.decryptPostContent(instance);
       });
     } else {
       if (instances.posts?.length) {
-        instances.posts.forEach((post) => {
-          User.decripPostContent(post);
-        });
+        Post.decryptContent(instances.posts);
       }
-    }
-  }
-
-  static decripPostContent(instance: Post): void {
-    if (instance.content) {
-      instance.content = CryptoJS.AES.decrypt(instance.content, process.env.ENCRYPTION_KEY!).toString(CryptoJS.enc.Utf8);
     }
   }
 }
